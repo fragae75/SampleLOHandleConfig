@@ -26,7 +26,6 @@ public class RunConsumeConfigs implements Runnable {
 	private String sServerAddress;
     private MqttClient mqttClient = null;
     private String sDeviceUuid;
-	
 	/*
 	 * Constructor : just keep the topic
 	 */
@@ -72,34 +71,51 @@ public class RunConsumeConfigs implements Runnable {
             mqttClient.notifyAll();
         }
 
+        /**
+         * Configuration parameter value: must match the parameter type:
+         *  str: String
+         *  bin: Base64 encoded string
+         *  f64: Double
+         *  u32 : Long
+         *  i32 : Integer
+         */
+
         public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
             // parse message as command
             DeviceConfig config = gson.fromJson(new String(mqttMessage.getPayload()), DeviceConfig.class);
-            System.out.println("received config: " + gson.toJson(config));
+            String sTmp = new String(mqttMessage.getPayload());
+            System.out.println("received config: " + gson.toJson(config) + " - " + sTmp);
             
-//            String str;
-/*            final DeviceConfig configResponse = new DeviceConfig();
-
+        	// Strange bug for u32 & i32 values : received as long and integer values but converted as Double 
+        	// by gson.fromJson() 10233 becomes 10233.0 !!! => need to rebuild and convert into configResponse
+            DeviceConfig configResponse = new DeviceConfig();
             for (Map.Entry<String, DeviceConfig.CfgParameter> entry : config.cfg.entrySet())
             {
-//                mAsset.setConfigValue(entry.getKey(), entry.getValue());
-                configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, entry.getValue().v));
+            	
+            	if ( entry.getValue().t.equals("u32") ) {
+            		String str = entry.getValue().v.toString();
+            		String str1 = str.substring(0, str.indexOf('.'));
+                	long lll = Long.parseLong(str1);
+                	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, lll ));
+            	}
+            	else if ( entry.getValue().t.equals("i32") ) {
+                		String str = entry.getValue().v.toString();
+                		String str1 = str.substring(0, str.indexOf('.'));
+                    	int iii = Integer.parseInt(str1);
+                    	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, iii ));
+                }else{
+                	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, entry.getValue().v));
+            	}
             }
-*/
-            // return response
-/*            final DeviceConfig configResponse = new DeviceConfig();
-            configResponse.cfg.put("logLevel", new DeviceConfig.CfgParameter("str", "LOG"));
-            configResponse.cfg.put("trigger", new DeviceConfig.CfgParameter("f64", 20.252));
-            configResponse.cfg.put("connDelaySec", new DeviceConfig.CfgParameter("u32", 10003));
-*/
+            configResponse.cid = config.cid;
 
+
+            // Publish on the config topic : MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG
             new Thread(new Runnable() {
                 public void run() {
                     try {
-                    	mqttClient.publish(MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG, gson.toJson(config).getBytes(), 0, false);
-        	            System.out.println("answer to config on: " + MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG + " : " + gson.toJson(config));
-//                      mqttClient.publish(MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG, gson.toJson(configResponse).getBytes(), 0, false);
-//        	            System.out.println("answer to config on: " + MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG + " : " + gson.toJson(configResponse));
+                    	mqttClient.publish(MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG, gson.toJson(configResponse).getBytes(), 0, false);
+        	            System.out.println("answer to config on: " + MQTTTopics.MQTT_TOPIC_RESPONSE_CONFIG + " : " + gson.toJson(configResponse));
                     } catch (MqttException me) {
                         System.out.println("reason " + me.getReasonCode());
                         System.out.println("msg " + me.getMessage());

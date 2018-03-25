@@ -41,6 +41,7 @@ public class SampleLOHandleConfig {
         deviceConfig.cfg.put("logLevel", new DeviceConfig.CfgParameter("str", "LOG"));
         deviceConfig.cfg.put("trigger", new DeviceConfig.CfgParameter("f64", 20.252));
         deviceConfig.cfg.put("connDelaySec", new DeviceConfig.CfgParameter("u32", 10003));
+        deviceConfig.cfg.put("min temperature", new DeviceConfig.CfgParameter("i32", 23));
 
         // encode to JSON
         String CONTENT = new Gson().toJson(deviceConfig);

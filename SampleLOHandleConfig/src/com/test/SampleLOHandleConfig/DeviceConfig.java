@@ -38,5 +38,7 @@ public class DeviceConfig {
      * current device configuration
      */
     public final Map<String, CfgParameter> cfg = new HashMap<String, CfgParameter>();
+    public Long cid;
+
 
 }

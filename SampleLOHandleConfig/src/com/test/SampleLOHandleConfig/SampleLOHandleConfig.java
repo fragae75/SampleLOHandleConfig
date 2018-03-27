@@ -82,10 +82,10 @@ public class SampleLOHandleConfig {
 	}
 
 	public static void main(String[] args) {
-      
-       // Publish the device config
-        publishConfig (MQTTTopics.MQTT_TOPIC_PUBLISH_CONFIG, API_KEY, SERVER, DEVICE_URN);
         
+        // Subscribe to the router : "dev/cfg/upd"
+        subscribeDeviceTopics(MQTTTopics.MQTT_TOPIC_SUBSCRIBE_CONFIG, API_KEY, SERVER, DEVICE_URN);
+      
         // Wait 1 sec to let if subscribe & get the data below
         try {
 			Thread.sleep(1000L);
@@ -94,8 +94,8 @@ public class SampleLOHandleConfig {
 			e.printStackTrace();
 		}
         
-        // Subscribe to the router : "dev/cfg/upd"
-        subscribeDeviceTopics(MQTTTopics.MQTT_TOPIC_SUBSCRIBE_CONFIG, API_KEY, SERVER, DEVICE_URN);
+        // Publish the device config
+        publishConfig (MQTTTopics.MQTT_TOPIC_PUBLISH_CONFIG, API_KEY, SERVER, DEVICE_URN);
  	}
 
 }

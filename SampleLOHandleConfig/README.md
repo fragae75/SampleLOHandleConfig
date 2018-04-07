@@ -4,7 +4,7 @@ Sample application for Datavenue Live Objects : https://liveobjects.orange-busin
 
 It is a simple sample that collect/answer configuration updates from Live Objects as a MQTT device ("json+device").
 
-The device will be visible in the Live Objects Park as the sensor SampleLO001. Select it and send it a command (menu "Commands"). The sample will publish on the dev/cfg topic the following configuration: <br>
+The sample will be visible in the Live Objects Park as the sensor SampleLO001. Select it and send it a command (menu "Commands"). The sample will publish on the dev/cfg topic the following configuration: <br>
 
 	{
 	"cfg":

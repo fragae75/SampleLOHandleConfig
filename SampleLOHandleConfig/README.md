@@ -4,7 +4,7 @@ Sample application for Datavenue Live Objects : https://liveobjects.orange-busin
 
 It is a simple sample that collect/answer configuration updates from Live Objects as a MQTT device ("json+device").
 
-The device will be visible in the Live Objects Park as the sensor SampleLO001. Select it and send it a command (menu "Commands"). The sample will publish on the dev/cfg/upd topic the following configuration: <br>
+The device will be visible in the Live Objects Park as the sensor SampleLO001. Select it and send it a command (menu "Commands"). The sample will publish on the dev/cfg topic the following configuration: <br>
 
 	{
 	"cfg":
@@ -15,6 +15,8 @@ The device will be visible in the Live Objects Park as the sensor SampleLO001. S
 			"trigger":{"t":"f64","v":20.252}
 		}
 	}
+
+And it will subscribe on the dev/cfg/upd topic
 
 You can update the configuration through the portal (menu "Parameters") : select a value, change it then click on "Send changes" button. <br>
 The configuration update API are available through the swagger (https://liveobjects.orange-business.com/#/faq, menu "Developer guide") at the entry "Device management parameter"<br>

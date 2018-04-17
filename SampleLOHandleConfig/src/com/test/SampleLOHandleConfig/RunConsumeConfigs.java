@@ -90,18 +90,12 @@ public class RunConsumeConfigs implements Runnable {
             DeviceConfig configResponse = new DeviceConfig();
             for (Map.Entry<String, DeviceConfig.CfgParameter> entry : config.cfg.entrySet())
             {
-            	
             	if ( entry.getValue().t.equals("u32") ) {
-            		String str = entry.getValue().v.toString();
-            		String str1 = str.substring(0, str.indexOf('.'));
-                	long lll = Long.parseLong(str1);
-                	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, lll ));
+                	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, (long)Float.parseFloat(entry.getValue().v.toString()) ));
             	}
             	else if ( entry.getValue().t.equals("i32") ) {
-                		String str = entry.getValue().v.toString();
-                		String str1 = str.substring(0, str.indexOf('.'));
-                    	int iii = Integer.parseInt(str1);
-                    	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, iii ));
+                   	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, (int)Float.parseFloat(entry.getValue().v.toString())));
+                    	
                 }
             	else {
                 	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, entry.getValue().v));

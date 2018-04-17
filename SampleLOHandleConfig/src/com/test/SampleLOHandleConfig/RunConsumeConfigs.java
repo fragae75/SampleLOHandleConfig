@@ -83,8 +83,7 @@ public class RunConsumeConfigs implements Runnable {
         public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
             // parse message as command
             DeviceConfig config = gson.fromJson(new String(mqttMessage.getPayload()), DeviceConfig.class);
-            String sTmp = new String(mqttMessage.getPayload());
-            System.out.println("received config: " + gson.toJson(config) + " - " + sTmp);
+            System.out.println("received config: " + gson.toJson(config));
             
         	// Strange bug for u32 & i32 values : received as long and integer values but converted as Double 
         	// by gson.fromJson() 10233 becomes 10233.0 !!! => need to rebuild and convert into configResponse
@@ -103,7 +102,8 @@ public class RunConsumeConfigs implements Runnable {
                 		String str1 = str.substring(0, str.indexOf('.'));
                     	int iii = Integer.parseInt(str1);
                     	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, iii ));
-                }else{
+                }
+            	else {
                 	configResponse.cfg.put(entry.getKey(), new DeviceConfig.CfgParameter(entry.getValue().t, entry.getValue().v));
             	}
             }

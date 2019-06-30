@@ -67,7 +67,7 @@ public class RunConsumeConfigs implements Runnable {
         }
 
         public void connectionLost(Throwable throwable) {
-            System.out.println("Connection lost");
+            System.out.println("Subscribe Connection lost");
             mqttClient.notifyAll();
         }
 
@@ -144,6 +144,7 @@ public class RunConsumeConfigs implements Runnable {
             connOpts.setUserName("json+device"); // selecting mode "device"
             connOpts.setPassword(sAPIKey.toCharArray()); // passing API key value as password
             connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(20);
 
             // Connection
             System.out.printf("Subscribe as a device - Connecting to broker: %s ...\n", sServerAddress);

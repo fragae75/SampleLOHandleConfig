@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import com.google.gson.Gson;
 
+
 public class SampleLOHandleConfig {
 
     public static String API_KEY = MyKey.key; // <-- REPLACE by your API key !
@@ -68,7 +69,7 @@ public class SampleLOHandleConfig {
 
             // Disconnection
             sampleClient.disconnect();
-            System.out.println("Disconnected");
+            System.out.println("Client for publish disconnected");
 
         } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());
@@ -83,19 +84,12 @@ public class SampleLOHandleConfig {
 
 	public static void main(String[] args) {
         
-        // Subscribe to the router : "dev/cfg/upd"
-        subscribeDeviceTopics(MQTTTopics.MQTT_TOPIC_SUBSCRIBE_CONFIG, API_KEY, SERVER, DEVICE_URN);
-      
-        // Wait 1 sec to let if subscribe & get the data below
-        try {
-			Thread.sleep(1000L);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        // Publish the device config
+        // Publish a hard coded default device config
         publishConfig (MQTTTopics.MQTT_TOPIC_PUBLISH_CONFIG, API_KEY, SERVER, DEVICE_URN);
+      
+
+        // Subscribe to the router : "dev/cfg/upd" to get config updates
+        subscribeDeviceTopics(MQTTTopics.MQTT_TOPIC_SUBSCRIBE_CONFIG, API_KEY, SERVER, DEVICE_URN);
  	}
 
 }
